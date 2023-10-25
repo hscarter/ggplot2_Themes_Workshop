@@ -4,7 +4,6 @@
  Northwestern University's Research Computing and Data Services
 
 # Concepts
-* theme() function
 * built in theme\_ functions
 * packages with other theme options
 * customizing with theme()

@@ -1,0 +1,142 @@
+---
+title: "ggplot themes"
+output: html_document
+date: "2023-10-24"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Packages
+
+-   readr - to read in data
+-   ggplot2 - for plotting and theme function
+-   ggthemes - for additional themes
+-   ThemePark - for novelty themes
+
+If these packages are new to you, you will need to install them which you can do by replacing packageName with the name of the package you want to install in the code below.
+
+```{r, eval=F}
+# If you need to install...
+install.packages("packageName")
+# If you need all of them, you can combine them in a list instead of installing one by one...
+install.packages(c("package1", "package2", "etc"))
+```
+
+In addition to installing the packages to your computer, we also need to load them into our library so we can use their functions in this session. 
+
+```{r}
+library(readr)
+library(ggplot2)
+library(ggthemes)
+```
+
+## Data
+
+The data we're going to work with today includes data on pumpkin production in the United States from the years 2000 to 2022, and data on candy sales in the United States from the 1970s to the late 2010s.
+
+Run the code chunk below to load the data into your environment.
+
+```{r}
+pumpkin_data <- read_csv("pumpkin_production.csv")
+pumpkin_data$pumpkin_lbs <- pumpkin_data$pumpkin_kcwt*10
+
+candy_data <- read_csv("candy_production_months.csv")
+```
+
+## Plot
+
+```{r}
+pumpkin_plot<-ggplot(pumpkin_data, aes(year, pumpkin_lbs))+
+  geom_col()+
+  labs(x="Year", y="Pumpkin production (lbs)", title = "Pumpkin Production", subtitle= "in the United States over the years 2000-2022")
+
+pumpkin_plot
+```
+
+## Built in themes
+
+There are some theme options built into ggplot2:
+-   theme_minimal()
+-   theme_bw()
+-   theme_void()
+-   theme_classic()
+-   theme_light()
+-   theme_linedraw()
+-   theme_dark()
+
+You can combine them with your plot object to change the theme, and overall look of the graph. Many of these are designed to looked more polished and less busy.
+
+If you already have a ggplot object you can add a theme to it as in the example below. If you are creating a ggplot object, theme functions can be added the same way you add geoms or other aspects of the plot.
+
+### Example:
+
+```{r}
+pumpkin_plot+theme_minimal()
+```
+
+### Exercise 1:
+
+Explore some of the built in theme options with the pumpkin_plot.
+
+```{r}
+
+```
+
+## Other packages also include theme options
+
+### ggthemes
+
+"Some extra themes, geoms, and scales for 'ggplot2'. Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. Provides 'geoms' for Tufte's box plot and range frame."
+
+```{r}
+candy_plot <- ggplot(candy_data, aes(date, amount))+
+  geom_line()+
+  geom_point(data = candy_data[candy_data$month == "10",], aes(color = ifelse(month == "10", "October", "Rest of Year")))+
+  scale_color_manual(values = c("orange", "black"))+
+  theme(legend.position = "bottom")
+candy_plot
+```
+
+```{r}
+ggplot(candy_data, aes(date, amount))+
+  geom_line(aes(color = month))+
+  scale_color_manual(values = c(rep("grey", times = 9), "orange", rep("grey", times = 2)))
+```
+
+
+## Different components controlled by theme()
+
+```{r}
+pumpkin_plot+
+  theme(panel.background = element_rect(fill = "orange"))
+
+pumpkin_plot+
+  theme(plot.title = element_text(color = "orange"))
+
+pumpkin_plot+
+  theme(plot.background = element_rect(fill = "orange"))
+
+pumpkin_plot+
+  theme(panel.grid = element_line(color = "orange"))
+
+pumpkin_plot+
+  theme(axis.title.x = element_text(color = "orange"))
+
+pumpkin_plot+
+  theme(axis.text.x = element_text(color = "orange"))
+
+pumpkin_plot+
+  theme(axis.text.x = element_text(color = "orange", size=20))
+
+pumpkin_plot+
+  theme(axis.ticks.x = element_line(color = "orange", linewidth = 2))
+
+pumpkin_plot+theme(panel.background = element_blank(),
+                   panel.grid = element_line(color = "orange"))
+
+pumpkin_plot+theme(text = element_text(color = "orange"))
+```
